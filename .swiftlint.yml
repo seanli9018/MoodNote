@@ -1,0 +1,57 @@
+# Enable or disable rules explicitly
+disabled_rules:
+  - force_cast # Allow force casts (sometimes necessary in SwiftUI previews)
+  - force_try # Allow force try (sometimes necessary in SwiftUI previews)
+  - function_body_length # SwiftUI views can have longer bodies
+  - file_length # SwiftUI files can be longer due to previews and views
+  - type_body_length # SwiftUI types (like View structs) can be longer
+  - identifier_name # Allow non-standard naming for SwiftUI previews (e.g., `PreviewProvider`)
+  - trailing_whitespace # Allow trailing whitespace (common in SwiftUI for alignment)
+
+# Configure specific rules
+opt_in_rules:
+  - attributes # Enforce consistent attribute usage
+  - closure_spacing # Ensure proper spacing in closures
+  - empty_enum_arguments # Simplify enums without arguments
+  - explicit_init # Encourage explicit initialization
+  - fatal_error_message # Require descriptive fatal error messages
+  - first_where # Prefer `.first(where:)` over `.filter { }.first`
+  - implicit_return # Encourage implicit returns in closures
+  - joined_default_parameter # Encourage omitting default parameters in `joined()`
+  - multiline_parameters # Encourage multiline parameters for readability
+  - operator_usage_whitespace # Ensure consistent spacing around operators
+  - overridden_super_call # Ensure `super` is called in overridden methods
+  - prohibited_super_call # Prevent calling `super` in certain methods
+  - redundant_nil_coalescing # Remove redundant `nil` coalescing
+  - switch_case_on_newline # Ensure each `case` is on a new line
+  - unneeded_parentheses_in_closure_argument # Remove unnecessary parentheses in closures
+  - vertical_whitespace # Encourage consistent vertical whitespace
+
+line_length: 120 # Allow longer lines for SwiftUI's declarative syntax
+
+# SwiftUI-specific custom rules (if needed)
+custom_rules:
+  preview_provider_naming:
+    name: "Preview Provider Naming"
+    regex: 'struct \w+_Previews: PreviewProvider'
+    message: "Preview providers should follow the naming convention `<ViewName>_Previews`."
+    severity: warning
+
+# Exclude files or directories
+excluded:
+  - Carthage
+  - Pods
+  - DerivedData
+  - Build
+  - *.xcodeproj
+  - *.xcworkspace
+  - Preview Content # Exclude SwiftUI preview content
+
+# Ignore warnings in generated code
+ignored:
+  - Generated
+  - R.generated.swift
+  - Strings.swift
+
+# Configure severity levels
+severity: warning # Treat most violations as warnings instead of errors

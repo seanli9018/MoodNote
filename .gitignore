@@ -1,0 +1,11 @@
+//
+//  .gitignore
+//  MoodNote
+//
+//  Created by Yuxiang Li on 2/20/25.
+//
+# Xcode
+DerivedData/
+*.xcodeproj/project.xcworkspace/
+.DS_Store
+*.xcuserstate

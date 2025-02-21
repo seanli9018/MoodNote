@@ -1,0 +1,6 @@
+--indent 4                  # Use 4 spaces for indentation
+--allman false              # Use standard braces (not Allman style)
+--commas always             # Always use trailing commas
+--trimwhitespace always     # Trim trailing whitespace
+--wraparguments after-first # Wrap arguments after the first line
+--wrapcollections after-first # Wrap collections after the first line
