@@ -9,9 +9,9 @@ import SwiftUI
 struct InputSheetView: View {
     @Binding var userInput: String
     @Binding var isSheetPresented: Bool
-    @Binding var navigateToDashboard: Bool
     @Environment(\.dismiss) var dismiss
     @FocusState private var isInputFieldFocused: Bool
+    @EnvironmentObject private var tabViewModel: TabViewModel
     
     var body: some View {
         VStack {
@@ -30,8 +30,8 @@ struct InputSheetView: View {
             
             TextField("What made you feel this way?", text: $userInput, onCommit: {
                 if !userInput.isEmpty {
-                    dismiss() // close the sheet first
-                    navigateToDashboard = true // then navigate
+                    dismiss() // Close the sheet first
+                    tabViewModel.selectedTab = 0 // Navigate to dashboard view
                 }
             })
                 .padding()
@@ -43,7 +43,7 @@ struct InputSheetView: View {
                 .padding(.horizontal)
                 .focused($isInputFieldFocused)
                 .onAppear() {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                         isInputFieldFocused = true
                      }
                  }

@@ -11,7 +11,6 @@ struct InteractiveMoodView: View {
     @State private var isSheetPresented = false
     @State private var userInput = ""
     @FocusState private var isInputFieldFocused: Bool
-    @Binding var navigateToDashboard: Bool
     
     var moodIcon: String
     var moodTitle: String
@@ -32,12 +31,12 @@ struct InteractiveMoodView: View {
            }
         }
         .sheet(isPresented: $isSheetPresented) {
-            InputSheetView(userInput: $userInput, isSheetPresented: $isSheetPresented, navigateToDashboard: $navigateToDashboard)
+            InputSheetView(userInput: $userInput, isSheetPresented: $isSheetPresented)
            Spacer()
         }
     }
 }
 
 #Preview {
-    InteractiveMoodView(navigateToDashboard: .constant(false), moodIcon: "excited", moodTitle: "Excited")
+    InteractiveMoodView(moodIcon: "excited", moodTitle: "Excited")
 }

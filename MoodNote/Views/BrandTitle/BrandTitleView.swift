@@ -8,12 +8,14 @@
 import SwiftUI
 
 struct BrandTitleView: View {
+    var title: String = ""
+    
     var body: some View {
         HStack(spacing: 0) {
             Image(systemName: "m.circle.fill")
                 .font(.largeTitle)
                 .fontWeight(.bold)
-            Text("ood Note")
+            Text(title)
                 .font(.title)
                 .fontWeight(.bold)
         }
