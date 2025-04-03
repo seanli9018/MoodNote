@@ -9,14 +9,85 @@ import SwiftUI
 
 struct AccountView: View {
     var body: some View {
-        NavigationView {
-            VStack {
-                // Step 3: Display a Line Chart using SwiftUI Charts
-                Text("Account view")
-                .frame(height: 300)
-                .padding()
+        List {
+            Section {
+                HStack {
+                    Text(UserModel.MOCK_USER.initials)
+                        .font(.title)
+                        .fontWeight(.semibold)
+                        .foregroundColor(.primary)
+                        .frame(width: 72, height: 72)
+                        .background(Color.gray.opacity(0.2))
+                        .clipShape(Circle())
+                    
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(UserModel.MOCK_USER.name)
+                            .fontWeight(.semibold)
+                            .padding(.top, 4)
+                        Text(UserModel.MOCK_USER.email)
+                            .font(.footnote)
+                            .foregroundColor(Color(.gray))
+                    }
+                }
             }
-            .navigationTitle("Account")
+            
+            Section("General") {
+                HStack {
+                    SettingRowView(image: "gear",
+                                   title: "Version",
+                                   tintColor: Color(.gray))
+                    
+                    Spacer()
+                    
+                    Text("1.0.0")
+                        .font(.subheadline)
+                        .foregroundColor(Color(.gray))
+                }
+                
+            }
+            
+            Section("Message") {
+                Button{
+                    print("check out message...")
+                } label: {
+                    HStack {
+                        SettingRowView(image: "bell.circle.fill",
+                                       title: "10 new messages",
+                                       tintColor: Color(.blue))
+                        
+                        Spacer()
+                        
+                        Image(systemName: "chevron.right")
+                            .foregroundColor(Color(.gray))
+                    }
+                }
+                
+            }
+            
+            Section("Account") {
+                Button{
+                    print("update profile...")
+                } label: {
+                    SettingRowView(image: "person.crop.circle.fill",
+                                   title: "Update Profile",
+                                   tintColor: Color(.orange))
+                }
+                Button{
+                    print("update password...")
+                } label: {
+                    SettingRowView(image: "lock.circle.fill",
+                                   title: "Update Password",
+                                   tintColor: Color(.orange))
+                }
+                Button{
+                    print("sign out...")
+                } label: {
+                    SettingRowView(image: "arrowshape.left.circle.fill",
+                                   title: "Sign Out",
+                                   tintColor: Color(.red))
+                }
+                
+            }
         }
     }
 }
