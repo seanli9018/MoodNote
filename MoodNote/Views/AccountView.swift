@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct AccountView: View {
+    @EnvironmentObject private var authViewModel: AuthViewModel
+    
     var body: some View {
         List {
             Section {
@@ -65,6 +67,7 @@ struct AccountView: View {
             }
             
             Section("Account") {
+                // Update user profile button.
                 Button{
                     print("update profile...")
                 } label: {
@@ -72,6 +75,7 @@ struct AccountView: View {
                                    title: "Update Profile",
                                    tintColor: Color(.orange))
                 }
+                // Update password button
                 Button{
                     print("update password...")
                 } label: {
@@ -79,8 +83,9 @@ struct AccountView: View {
                                    title: "Update Password",
                                    tintColor: Color(.orange))
                 }
+                // Sign out button
                 Button{
-                    print("sign out...")
+                    authViewModel.logout()
                 } label: {
                     SettingRowView(image: "arrowshape.left.circle.fill",
                                    title: "Sign Out",

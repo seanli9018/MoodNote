@@ -8,19 +8,32 @@
 import SwiftUI
 
 struct MoodNoteView: View {
-    @EnvironmentObject private var tabViewModel: TabViewModel // Access global state/context
+    // Access global state/context
+    @EnvironmentObject private var tabViewModel: TabViewModel
+    @EnvironmentObject private var authViewModel: AuthViewModel
     
     var body: some View {
-        TabsView()
-            .onAppear {
-                tabViewModel.selectedTab = 1
+        Group {
+            if authViewModel.isAuthenticated != false {
+                TabsView()
+                    .onAppear {
+                        tabViewModel.selectedTab = 0
+                        // Always go to Dashboard tab when app loaded.
+                    }
+            } else {
+                LoginView(loginViewModel: LoginViewModel()).environmentObject(authViewModel)
             }
+        }
     }
     
 }
 
 #Preview {
     let mockSelection = TabViewModel()
+    let authMock = AuthViewModel()
+    
     MoodNoteView()
-        .environmentObject(mockSelection) // Inject mock environment object
+        // Inject mock environment object
+        .environmentObject(mockSelection)
+        .environmentObject(authMock)
 }

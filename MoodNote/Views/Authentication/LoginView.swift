@@ -8,8 +8,10 @@
 import SwiftUI
 
 struct LoginView: View {
-    @State private var email: String = ""
-    @State private var password: String = ""
+    // Global view model for authentication.
+    @EnvironmentObject private var authViewModel: AuthViewModel
+    // its own view model
+    @ObservedObject var loginViewModel: LoginViewModel
     
     var body: some View {
         NavigationStack {
@@ -19,9 +21,9 @@ struct LoginView: View {
                 BrandTitleView(title: "Login")
                 // Form fields
                 VStack(spacing: 24) {
-                    InputView(text: $email,title: "Email", placeholder: "name@example.com" )
+                    InputView(text: $loginViewModel.email,title: "Email", placeholder: "name@example.com" )
                         .autocapitalization(.none)
-                    InputView(text: $password, title: "Password", placeholder: "Enter your password", isSecureField: true)
+                    InputView(text: $loginViewModel.password, title: "Password", placeholder: "Enter your password", isSecureField: true)
                         .autocapitalization(.none)
                 }
                 .padding(.horizontal)
@@ -29,7 +31,11 @@ struct LoginView: View {
                 
                 // Sign in button
                 Button {
-                    print("Log user in...")
+                    Task {
+                        try await authViewModel.login(
+                                    withEmail: loginViewModel.email,
+                                    password: loginViewModel.password)
+                    }
                 } label: {
                     HStack {
                         Text("LOG IN")
@@ -42,12 +48,14 @@ struct LoginView: View {
                 .background(Color(.label))
                 .cornerRadius(8)
                 .padding(.top, 32)
+                .opacity(!loginViewModel.formIsValid ? 0.5 : 1)
+                .disabled(!loginViewModel.formIsValid)
                 
                 Spacer()
                 
                 // Sign up button
                 NavigationLink {
-                    RegistrationView()
+                    RegistrationView(registrationViewModel: RegistrationViewModel())
                         .navigationBarBackButtonHidden(true)
                 } label: {
                     HStack {
@@ -65,7 +73,10 @@ struct LoginView: View {
 }
 
 struct LoginView_Previews: PreviewProvider {
+    static let authPreview = AuthViewModel()
+
     static var previews: some View {
-        LoginView()
+        LoginView(loginViewModel: .preview)
+            .environmentObject(authPreview)
     }
 }

@@ -12,6 +12,7 @@ struct UserModel: Identifiable, Codable {
     let id: String
     let name: String
     let email: String
+    var photo: String?
     
     var initials: String {
         let formatter = PersonNameComponentsFormatter()
@@ -22,8 +23,14 @@ struct UserModel: Identifiable, Codable {
         
         return "MN"
     }
+    
+    // translate id field
+    enum CodingKeys: String, CodingKey {
+        case id = "_id"
+        case name, email, photo
+    }
 }
 
 extension UserModel {
-    static var MOCK_USER = UserModel(id: NSUUID().uuidString, name: "Yuxiang Li", email: "test@gmail.com")
+    static var MOCK_USER = UserModel(id: NSUUID().uuidString, name: "Yuxiang Li", email: "test@gmail.com", photo: nil)
 }

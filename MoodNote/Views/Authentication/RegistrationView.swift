@@ -8,11 +8,11 @@
 import SwiftUI
 
 struct RegistrationView: View {
-    @State private var email: String = ""
-    @State private var name = ""
-    @State private var password: String = ""
-    @State private var confirmPassword: String = ""
     @Environment(\.dismiss) var dismiss
+    // Global view model
+    @EnvironmentObject private var authViewModel: AuthViewModel
+    // Its own view model
+    @ObservedObject var registrationViewModel: RegistrationViewModel
     
     var body: some View {
         NavigationStack {
@@ -22,20 +22,24 @@ struct RegistrationView: View {
                 BrandTitleView(title: "Sign Up")
                 // Form fields
                 VStack(spacing: 24) {
-                    InputView(text: $email, title: "Email", placeholder: "name@example.com" )
+                    InputView(text: $registrationViewModel.email, title: "Email", placeholder: "name@example.com" )
                         .autocapitalization(.none)
-                    InputView(text: $name, title: "Full Name", placeholder: "Enter your name" )
-                    InputView(text: $password, title: "Password", placeholder: "Enter your password", isSecureField: true)
+                    InputView(text: $registrationViewModel.name, title: "Full Name", placeholder: "Enter your name" )
+                    InputView(text: $registrationViewModel.password, title: "Password", placeholder: "Enter your password", isSecureField: true)
+                        .textContentType(.oneTimeCode) // or use .newPassword if you want autofill
                         .autocapitalization(.none)
-                    InputView(text: $confirmPassword, title: "Confirm Password", placeholder: "Confirm your password", isSecureField: true)
+                    InputView(text: $registrationViewModel.confirmPassword, title: "Confirm Password", placeholder: "Confirm your password", isSecureField: true)
+                        .textContentType(.oneTimeCode) // or use .newPassword if you want autofill
                         .autocapitalization(.none)
                 }
                 .padding(.horizontal)
                 .padding(.top, 12)
                 
-                // Sign in button
+                // Sign up button
                 Button {
-                    print("Sign up user...")
+                    Task {
+                        try await authViewModel.signup(withEmail: registrationViewModel.email, password: registrationViewModel.password, name: registrationViewModel.name)
+                    }
                 } label: {
                     HStack {
                         Text("Sign Up")
@@ -48,10 +52,12 @@ struct RegistrationView: View {
                 .background(Color(.label))
                 .cornerRadius(8)
                 .padding(.top, 32)
+                .opacity(!registrationViewModel.formIsValid ? 0.5 : 1)
+                .disabled(!registrationViewModel.formIsValid)
                 
                 Spacer()
                 
-                // Sign up button
+                // Go back to log in view.
                 Button {
                     dismiss()
                 } label: {
@@ -70,7 +76,10 @@ struct RegistrationView: View {
 }
 
 struct RegistrationView_Previews: PreviewProvider {
+    static let authPreview = AuthViewModel()
+
     static var previews: some View {
-        RegistrationView()
+        RegistrationView(registrationViewModel: .preview)
+            .environmentObject(authPreview)
     }
 }

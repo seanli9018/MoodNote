@@ -9,12 +9,17 @@ import SwiftUI
 
 @main
 struct MoodNoteApp: App {
-    @StateObject private var tabViewModel = TabViewModel() // Shared tab view model owned here
+    // Shared tab view model owned here.
+    @StateObject private var tabViewModel = TabViewModel()
+    // Shared auth view model owned here: with currentUser: UserModel data and isAuthenticated: Bool data.
+    @StateObject private var authViewModel = AuthViewModel()
     
     var body: some Scene {
         WindowGroup {
+            // environment state/context providing to all subviews
             MoodNoteView()
-                .environmentObject(tabViewModel) // environment state/context providing to all subviews
+                .environmentObject(tabViewModel)
+                .environmentObject(authViewModel)
         }
     }
 }
