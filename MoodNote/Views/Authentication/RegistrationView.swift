@@ -37,8 +37,9 @@ struct RegistrationView: View {
                 
                 // Sign up button
                 Button {
+                    // TODO, if the sign up goes wrong, need to show error on the view
                     Task {
-                        try await authViewModel.signup(withEmail: registrationViewModel.email, password: registrationViewModel.password, name: registrationViewModel.name)
+                        try await authViewModel.signup(withEmail: registrationViewModel.email, password: registrationViewModel.password, passwordConfirm: registrationViewModel.confirmPassword, name: registrationViewModel.name)
                     }
                 } label: {
                     HStack {

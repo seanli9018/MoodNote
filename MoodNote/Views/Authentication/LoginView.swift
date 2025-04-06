@@ -29,8 +29,9 @@ struct LoginView: View {
                 .padding(.horizontal)
                 .padding(.top, 12)
                 
-                // Sign in button
+                // Log in button
                 Button {
+                    // TODO, if the login goes wrong, need to show error on the view
                     Task {
                         try await authViewModel.login(
                                     withEmail: loginViewModel.email,

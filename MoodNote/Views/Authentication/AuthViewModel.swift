@@ -7,40 +7,58 @@
 
 import Foundation
 
-// Published changes in the main thread.
+// Published changes in viewModel observable should be within the main thread.
 @MainActor
 class AuthViewModel: ObservableObject {
+    enum FetchStatus {
+        case idle
+        case fetching
+        case success
+        case failure(Error)
+    }
     @Published var isAuthenticated: Bool = false
     @Published var currentUser: UserModel?
+    @Published var token: String?
+    // Partially private, setting status is ONLY allowed within the AuthViewModel class.
+    private(set) var status: FetchStatus = .idle
+    private let authFetcher = AuthService()
     
     func login(withEmail email: String, password: String) async throws {
+        status = .fetching
         do {
-            print("user logged in...")
             // URL session api call to log in user
-            // Assign user json in the response to UserModel
-            // set isAuthenticated to true
+            let authResponse = try await authFetcher.login(withEmail: email, password: password)
+            // Assign data
+            self.currentUser = authResponse.data.user
+            self.token = authResponse.token
             self.isAuthenticated = true
+            status = .success
         } catch {
-            print("Error: log in failed.")
+            status = .failure(error)
             self.isAuthenticated = false
         }
     }
     
-    func signup(withEmail email: String, password: String, name: String) async throws {
+    func signup(withEmail email: String, password: String, passwordConfirm: String, name: String) async throws {
+        status = .fetching
         do {
-            print("user signed up...")
             // URL session api call to create user
-            // Assign user json in the response to UserModel
-            // set isAuthenticated to true
+            let authResponse = try await authFetcher.signup(withEmail: email, password: password, passwordConfirm: passwordConfirm, name: name)
+            print(authResponse)
+            // Assign data
+            self.currentUser = authResponse.data.user
+            self.token = authResponse.token
             self.isAuthenticated = true
+            status = .success
         } catch {
-            print("Error: sign up failed.")
+            status = .failure(error)
             self.isAuthenticated = false
         }
     }
     
     func logout() {
         self.currentUser = nil
+        self.token = nil
         self.isAuthenticated = false
     }
     

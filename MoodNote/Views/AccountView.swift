@@ -11,87 +11,89 @@ struct AccountView: View {
     @EnvironmentObject private var authViewModel: AuthViewModel
     
     var body: some View {
-        List {
-            Section {
-                HStack {
-                    Text(UserModel.MOCK_USER.initials)
-                        .font(.title)
-                        .fontWeight(.semibold)
-                        .foregroundColor(.primary)
-                        .frame(width: 72, height: 72)
-                        .background(Color.gray.opacity(0.2))
-                        .clipShape(Circle())
-                    
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(UserModel.MOCK_USER.name)
+        if let user = authViewModel.currentUser{
+            List {
+                Section {
+                    HStack {
+                        Text(user.initials)
+                            .font(.title)
                             .fontWeight(.semibold)
-                            .padding(.top, 4)
-                        Text(UserModel.MOCK_USER.email)
-                            .font(.footnote)
-                            .foregroundColor(Color(.gray))
+                            .foregroundColor(.primary)
+                            .frame(width: 72, height: 72)
+                            .background(Color.gray.opacity(0.2))
+                            .clipShape(Circle())
+                        
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(user.name)
+                                .fontWeight(.semibold)
+                                .padding(.top, 4)
+                            Text(user.email)
+                                .font(.footnote)
+                                .foregroundColor(Color(.gray))
+                        }
                     }
                 }
-            }
-            
-            Section("General") {
-                HStack {
-                    SettingRowView(image: "gear",
-                                   title: "Version",
-                                   tintColor: Color(.gray))
-                    
-                    Spacer()
-                    
-                    Text("1.0.0")
-                        .font(.subheadline)
-                        .foregroundColor(Color(.gray))
-                }
                 
-            }
-            
-            Section("Message") {
-                Button{
-                    print("check out message...")
-                } label: {
+                Section("General") {
                     HStack {
-                        SettingRowView(image: "bell.circle.fill",
-                                       title: "10 new messages",
-                                       tintColor: Color(.blue))
+                        SettingRowView(image: "gear",
+                                       title: "Version",
+                                       tintColor: Color(.gray))
                         
                         Spacer()
                         
-                        Image(systemName: "chevron.right")
+                        Text("1.0.0")
+                            .font(.subheadline)
                             .foregroundColor(Color(.gray))
                     }
+                    
                 }
                 
-            }
-            
-            Section("Account") {
-                // Update user profile button.
-                Button{
-                    print("update profile...")
-                } label: {
-                    SettingRowView(image: "person.crop.circle.fill",
-                                   title: "Update Profile",
-                                   tintColor: Color(.orange))
-                }
-                // Update password button
-                Button{
-                    print("update password...")
-                } label: {
-                    SettingRowView(image: "lock.circle.fill",
-                                   title: "Update Password",
-                                   tintColor: Color(.orange))
-                }
-                // Sign out button
-                Button{
-                    authViewModel.logout()
-                } label: {
-                    SettingRowView(image: "arrowshape.left.circle.fill",
-                                   title: "Sign Out",
-                                   tintColor: Color(.red))
+                Section("Message") {
+                    Button{
+                        print("check out message...")
+                    } label: {
+                        HStack {
+                            SettingRowView(image: "bell.circle.fill",
+                                           title: "10 new messages",
+                                           tintColor: Color(.blue))
+                            
+                            Spacer()
+                            
+                            Image(systemName: "chevron.right")
+                                .foregroundColor(Color(.gray))
+                        }
+                    }
+                    
                 }
                 
+                Section("Account") {
+                    // Update user profile button.
+                    Button{
+                        print("update profile...")
+                    } label: {
+                        SettingRowView(image: "person.crop.circle.fill",
+                                       title: "Update Profile",
+                                       tintColor: Color(.orange))
+                    }
+                    // Update password button
+                    Button{
+                        print("update password...")
+                    } label: {
+                        SettingRowView(image: "lock.circle.fill",
+                                       title: "Update Password",
+                                       tintColor: Color(.orange))
+                    }
+                    // Sign out button
+                    Button{
+                        authViewModel.logout()
+                    } label: {
+                        SettingRowView(image: "arrowshape.left.circle.fill",
+                                       title: "Sign Out",
+                                       tintColor: Color(.red))
+                    }
+                    
+                }
             }
         }
     }
