@@ -13,6 +13,7 @@ struct RegistrationView: View {
     @EnvironmentObject private var authViewModel: AuthViewModel
     // Its own view model
     @ObservedObject var registrationViewModel: RegistrationViewModel
+    @State private var showError = false
     
     var body: some View {
         NavigationStack {
@@ -40,6 +41,10 @@ struct RegistrationView: View {
                     // TODO, if the sign up goes wrong, need to show error on the view
                     Task {
                         try await authViewModel.signup(withEmail: registrationViewModel.email, password: registrationViewModel.password, passwordConfirm: registrationViewModel.confirmPassword, name: registrationViewModel.name)
+                        
+                        if authViewModel.errorMessage != nil {
+                            showError = true
+                        }
                     }
                 } label: {
                     HStack {
@@ -72,7 +77,13 @@ struct RegistrationView: View {
                     }
                 }
             }
+            .alert("Signup Failure", isPresented: $showError, actions: {
+                Button("OK", role: .cancel) { }
+            }, message: {
+                Text(authViewModel.errorMessage ?? "An unknown error occurred.")
+            })
         }
+        .hideKeyboardOnTap()
     }
 }
 

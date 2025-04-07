@@ -12,6 +12,7 @@ struct LoginView: View {
     @EnvironmentObject private var authViewModel: AuthViewModel
     // its own view model
     @ObservedObject var loginViewModel: LoginViewModel
+    @State private var showError = false
     
     var body: some View {
         NavigationStack {
@@ -36,6 +37,9 @@ struct LoginView: View {
                         try await authViewModel.login(
                                     withEmail: loginViewModel.email,
                                     password: loginViewModel.password)
+                        if authViewModel.errorMessage != nil {
+                            showError = true
+                        }
                     }
                 } label: {
                     HStack {
@@ -69,7 +73,13 @@ struct LoginView: View {
                     }
                 }
             }
+            .alert("Login Failure", isPresented: $showError, actions: {
+                Button("OK", role: .cancel) { }
+            }, message: {
+                Text(authViewModel.errorMessage ?? "An unknown error occurred.")
+            })
         }
+        .hideKeyboardOnTap()
     }
 }
 
