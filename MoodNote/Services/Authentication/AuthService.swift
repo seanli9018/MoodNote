@@ -8,6 +8,16 @@
 
 import Foundation
 
+struct AuthResponse: Codable {
+    let status: String
+    let token: String
+    let data: UserData
+}
+
+struct UserData: Codable {
+    let user: UserModel
+}
+
 struct AuthService {
     private enum FetchError: Error {
         case badRequest

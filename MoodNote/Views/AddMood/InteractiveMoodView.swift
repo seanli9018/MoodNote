@@ -12,14 +12,15 @@ struct InteractiveMoodView: View {
     @State private var userInput = ""
     @FocusState private var isInputFieldFocused: Bool
     
-    var moodIcon: String
-    var moodTitle: String
+    let moodIcon: String
+    let moodTitle: String
+    let moodName: String
     
     var body: some View {
         // Icon that opens the sheet
-        Button(action: {
-           isSheetPresented = true
-        }) {
+        Button{
+            isSheetPresented = true
+        } label:  {
             VStack {
                Image(moodIcon)
                    .resizable()
@@ -31,12 +32,12 @@ struct InteractiveMoodView: View {
            }
         }
         .sheet(isPresented: $isSheetPresented) {
-            InputSheetView(userInput: $userInput, isSheetPresented: $isSheetPresented)
+            InputSheetView(userInput: $userInput, isSheetPresented: $isSheetPresented, moodName: moodName, addMoodViewModel: AddMoodViewModel())
            Spacer()
         }
     }
 }
 
 #Preview {
-    InteractiveMoodView(moodIcon: "excited", moodTitle: "Excited")
+    InteractiveMoodView(moodIcon: "excited", moodTitle: "Excited", moodName: "excited")
 }

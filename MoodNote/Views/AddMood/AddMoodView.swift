@@ -44,18 +44,20 @@ struct AddMoodView: View {
                                                         colorScheme == .dark
                                                     ? "satisfied_dark"
                                                     : "satisfied",
-                                                moodTitle: "Satisfied"
-                                               )
+                                                moodTitle: "Satisfied",
+                                                moodName: "satisfied")
                             InteractiveMoodView(moodIcon:
                                                     colorScheme == .dark
                                                 ? "very_satisfied_dark"
                                                 : "very_satisfied",
-                                                moodTitle: "Very satisfied")
+                                                moodTitle: "Very satisfied",
+                                                moodName: "very-satisfied")
                             InteractiveMoodView(moodIcon:
                                                     colorScheme == .dark
                                                 ? "excited_dark"
                                                 : "excited",
-                                                moodTitle: "Excited")
+                                                moodTitle: "Excited",
+                                                moodName: "excited")
                         }
                     }
                     Spacer()
@@ -70,12 +72,14 @@ struct AddMoodView: View {
                                                     colorScheme == .dark
                                                 ? "neutral_dark"
                                                 : "neutral",
-                                                moodTitle: "Neutral")
+                                                moodTitle: "Neutral",
+                                                moodName: "neutral")
                             InteractiveMoodView(moodIcon:
                                                     colorScheme == .dark
                                                 ? "calm_dark"
                                                 : "calm",
-                                                moodTitle: "Calm")
+                                                moodTitle: "Calm",
+                                                moodName: "calm")
                             Color.clear // Empty space for the 3rd column
                         }
                     }
@@ -91,22 +95,26 @@ struct AddMoodView: View {
                                                     colorScheme == .dark
                                                 ? "dissatisfied_dark"
                                                 : "dissatisfied",
-                                                moodTitle: "Dissatisfied")
+                                                moodTitle: "Dissatisfied",
+                                                moodName: "dissatisfied")
                             InteractiveMoodView(moodIcon:
                                                     colorScheme == .dark
                                                 ? "bad_dark"
                                                 : "bad",
-                                                moodTitle: "Bad")
+                                                moodTitle: "Bad",
+                                                moodName: "bad")
                             InteractiveMoodView(moodIcon:
                                                     colorScheme == .dark
                                                 ? "stressed_dark"
                                                 : "stressed",
-                                                moodTitle: "Stressed")
+                                                moodTitle: "Stressed",
+                                                moodName: "stressed")
                             InteractiveMoodView(moodIcon:
                                                     colorScheme == .dark
                                                 ? "frustrated_dark"
                                                 : "frustrated",
-                                                moodTitle: "Frustrated")
+                                                moodTitle: "Frustrated",
+                                                moodName: "frustrated")
                         }
                     }
                 }
