@@ -32,7 +32,7 @@ struct InteractiveMoodView: View {
            }
         }
         .sheet(isPresented: $isSheetPresented) {
-            InputSheetView(userInput: $userInput, isSheetPresented: $isSheetPresented, moodName: moodName, addMoodViewModel: AddMoodViewModel())
+            InputSheetView(userInput: $userInput, isSheetPresented: $isSheetPresented, moodName: moodName)
            Spacer()
         }
     }

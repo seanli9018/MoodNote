@@ -79,7 +79,8 @@ struct DashboardView: View {
     
     var body: some View {
         NavigationView {
-            VStack {
+            ScrollView {
+                VStack {
                 // Filter Picker
                 Picker("Filter", selection: $filter) {
                     ForEach(FilterOption.allCases, id: \.self) { option in
@@ -91,20 +92,20 @@ struct DashboardView: View {
                 
                 // Line Chart
                 Chart(filteredData) { dataPoint in
-                   LineMark(
-                       x: .value("Date", dataPoint.date, unit: filter == .week ? .day : .month),
-                       y: .value("Mood Level", dataPoint.moodLevel)
-                   )
-                   .interpolationMethod(.catmullRom) // Smooth line
-                   .foregroundStyle(Color(.label)) // Change line color
-
-                   PointMark(
-                       x: .value("Date", dataPoint.date, unit: filter == .week ? .day : .month),
-                       y: .value("Mood Level", dataPoint.moodLevel)
-                   )
-                   .foregroundStyle(Color(.label)) // Change point mark color
-                   .symbolSize(15) // Size of the points
-               }
+                    LineMark(
+                        x: .value("Date", dataPoint.date, unit: filter == .week ? .day : .month),
+                        y: .value("Mood Level", dataPoint.moodLevel)
+                    )
+                    .interpolationMethod(.catmullRom) // Smooth line
+                    .foregroundStyle(Color(.label)) // Change line color
+                    
+                    PointMark(
+                        x: .value("Date", dataPoint.date, unit: filter == .week ? .day : .month),
+                        y: .value("Mood Level", dataPoint.moodLevel)
+                    )
+                    .foregroundStyle(Color(.label)) // Change point mark color
+                    .symbolSize(15) // Size of the points
+                }
                 .chartXAxis {
                     AxisMarks(values: .stride(by: filter == .week ? .day : .month)) { value in
                         if let date = value.as(Date.self) {
@@ -118,12 +119,30 @@ struct DashboardView: View {
                         }
                     }
                 }
-               .accentColor(Color(.label))
-               .frame(height: 200)
-               .padding()
+                .accentColor(Color(.label))
+                .frame(height: 200)
+                .padding(.vertical)
                 
                 Spacer()
             }
+                VStack(alignment: .leading) {
+                    Text("Your Recent Moods")
+                        .font(.headline)
+                        .foregroundColor(Color(.label))
+                        .multilineTextAlignment(.leading)
+                    ForEach(0..<5) { index in
+                        MoodListItem(moodDetails: MoodModel.MOCK_MOOD)
+                                    .padding(.vertical, 8)
+                                    .padding(.horizontal)
+                                
+                                if index < 6 {
+                                    Divider()
+                                        .padding(.leading) // optional: align divider with content
+                                }
+                            }
+                }
+            }
+            .padding(.horizontal)
             .navigationTitle("Mood Dashboard")
         }
     }

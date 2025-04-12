@@ -21,7 +21,7 @@ enum MoodName: String, Codable {
 
 struct MoodModel: Identifiable, Codable {
     let id: String
-    let name: MoodName
+    let name: MoodName.RawValue
     let note: String
     let createdAt: Date
     var images: [String]?
@@ -33,4 +33,9 @@ struct MoodModel: Identifiable, Codable {
         case id = "_id"
         case name, note, createdAt, images, user, level, location
     }
+}
+
+
+extension MoodModel {
+    static var MOCK_MOOD: MoodModel = MoodModel(id: NSUUID().uuidString, name: MoodName.excited.rawValue, note: "This is a test note, and it is very long to see how it looks like in the UI. It is very long to see how it looks like in the UI. It is very long to see how it looks like in the UI.", createdAt: Date(), images: nil, user: "123", level: 100, location: LocationModel(type: "Point", coordinates: [123.45, 678.90], address: nil, description: nil))
 }

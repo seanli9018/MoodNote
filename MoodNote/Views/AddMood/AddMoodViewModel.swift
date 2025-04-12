@@ -8,7 +8,7 @@
 import Foundation
 
 @MainActor
-class AddMoodViewModel: ObservableObject {
+class AddMoodViewModel {
     enum ServiceStatus {
         case idle
         case fetching

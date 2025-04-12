@@ -11,7 +11,8 @@ struct InputSheetView: View {
     @Binding var userInput: String
     @Binding var isSheetPresented: Bool
     let moodName: String
-    @ObservedObject var addMoodViewModel: AddMoodViewModel
+//    @ObservedObject var addMoodViewModel: AddMoodViewModel
+    let addMoodViewModel = AddMoodViewModel()
     // environment
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject private var tabViewModel: TabViewModel
