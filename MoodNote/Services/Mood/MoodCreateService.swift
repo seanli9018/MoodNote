@@ -26,7 +26,7 @@ struct MoodCreateData: Decodable {
 struct MoodCreateService {
     private enum ServiceError: Error {
         case badRequest
-        case unauthroized
+        case unauthorized
         case badResponse
     }
     
@@ -49,7 +49,7 @@ struct MoodCreateService {
         guard let tokenData = KeychainUtil.read(service: tokenService, account: tokenAccount),
               let token = String(data: tokenData, encoding: .utf8) else {
             print("Unauthrozied error: Token not found.")
-            throw ServiceError.unauthroized // Handle case if token is not found
+            throw ServiceError.unauthorized // Handle case if token is not found
         }
         
         // Prepare request

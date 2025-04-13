@@ -8,7 +8,7 @@
 import Foundation
 
 @MainActor
-class AddMoodViewModel {
+class AddMoodViewModel: ObservableObject {
     enum ServiceStatus {
         case idle
         case fetching
@@ -16,7 +16,7 @@ class AddMoodViewModel {
         case failure(error: Error)
     }
     @Published var errorMessage: String?
-    private(set) var status: ServiceStatus = .idle
+    @Published private(set) var status: ServiceStatus = .idle
     
     private let moodService = MoodCreateService()
     

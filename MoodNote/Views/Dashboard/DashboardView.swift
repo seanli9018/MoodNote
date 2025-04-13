@@ -47,6 +47,10 @@ enum FilterOption: String, CaseIterable {
 }
 
 struct DashboardView: View {
+    // Internal dashboard view model data
+    @StateObject private var viewModel = DashboardViewModel()
+    // Global environment tab view model.
+    @EnvironmentObject private var tabViewModel: TabViewModel
     @State private var filter: FilterOption = .week
     
     // Filter the data based on the selected option
@@ -81,69 +85,99 @@ struct DashboardView: View {
         NavigationView {
             ScrollView {
                 VStack {
-                // Filter Picker
-                Picker("Filter", selection: $filter) {
-                    ForEach(FilterOption.allCases, id: \.self) { option in
-                        Text(option.rawValue)
+                    // Filter Picker
+                    Picker("Filter", selection: $filter) {
+                        ForEach(FilterOption.allCases, id: \.self) { option in
+                            Text(option.rawValue)
+                        }
                     }
-                }
-                .pickerStyle(SegmentedPickerStyle())
-                .padding()
-                
-                // Line Chart
-                Chart(filteredData) { dataPoint in
-                    LineMark(
-                        x: .value("Date", dataPoint.date, unit: filter == .week ? .day : .month),
-                        y: .value("Mood Level", dataPoint.moodLevel)
-                    )
-                    .interpolationMethod(.catmullRom) // Smooth line
-                    .foregroundStyle(Color(.label)) // Change line color
+                    .pickerStyle(SegmentedPickerStyle())
+                    .padding()
                     
-                    PointMark(
-                        x: .value("Date", dataPoint.date, unit: filter == .week ? .day : .month),
-                        y: .value("Mood Level", dataPoint.moodLevel)
-                    )
-                    .foregroundStyle(Color(.label)) // Change point mark color
-                    .symbolSize(15) // Size of the points
-                }
-                .chartXAxis {
-                    AxisMarks(values: .stride(by: filter == .week ? .day : .month)) { value in
-                        if let date = value.as(Date.self) {
-                            AxisValueLabel {
-                                if filter == .week {
-                                    Text(dayName(from: date)) // Format day name for weekly filter
-                                } else {
-                                    Text(monthName(from: date)) // Format week name for monthly filter
+                    // Line Chart
+                    Chart(filteredData) { dataPoint in
+                        LineMark(
+                            x: .value("Date", dataPoint.date, unit: filter == .week ? .day : .month),
+                            y: .value("Mood Level", dataPoint.moodLevel)
+                        )
+                        .interpolationMethod(.catmullRom) // Smooth line
+                        .foregroundStyle(Color(.label)) // Change line color
+                        
+                        PointMark(
+                            x: .value("Date", dataPoint.date, unit: filter == .week ? .day : .month),
+                            y: .value("Mood Level", dataPoint.moodLevel)
+                        )
+                        .foregroundStyle(Color(.label)) // Change point mark color
+                        .symbolSize(15) // Size of the points
+                    }
+                    .chartXAxis {
+                        AxisMarks(values: .stride(by: filter == .week ? .day : .month)) { value in
+                            if let date = value.as(Date.self) {
+                                AxisValueLabel {
+                                    if filter == .week {
+                                        Text(dayName(from: date)) // Format day name for weekly filter
+                                    } else {
+                                        Text(monthName(from: date)) // Format week name for monthly filter
+                                    }
                                 }
                             }
                         }
                     }
+                    .accentColor(Color(.label))
+                    .frame(height: 200)
+                    .padding(.vertical)
+                    
+                    Spacer()
                 }
-                .accentColor(Color(.label))
-                .frame(height: 200)
-                .padding(.vertical)
-                
-                Spacer()
-            }
                 VStack(alignment: .leading) {
                     Text("Your Recent Moods")
                         .font(.headline)
                         .foregroundColor(Color(.label))
                         .multilineTextAlignment(.leading)
-                    ForEach(0..<5) { index in
-                        MoodListItem(moodDetails: MoodModel.MOCK_MOOD)
+                    switch viewModel.status {
+                        case .idle, .fetching:
+                            ProgressView("Loading moods...")
+                                .padding()
+                            
+                        case .failure(_):
+                            VStack(spacing: 12) {
+                                Text(viewModel.errorMessage ?? "Something went wrong")
+                                    .foregroundColor(.red)
+                                    .multilineTextAlignment(.center)
+                            }
+                            
+                        case .success:
+                            ForEach(viewModel.moods.indices) { index in
+                                let mood = viewModel.moods[index]
+                                
+                                MoodListItem(moodDetails: mood)
                                     .padding(.vertical, 8)
                                     .padding(.horizontal)
                                 
-                                if index < 6 {
+                                if index < viewModel.moods.count - 1 {
                                     Divider()
                                         .padding(.leading) // optional: align divider with content
                                 }
                             }
+                    }
+                }
+                .padding(.horizontal)
+                .navigationTitle("Mood Dashboard")
+            }
+            .onAppear {
+                Task {
+                    try await viewModel.fetchMyRecentMoods()
                 }
             }
-            .padding(.horizontal)
-            .navigationTitle("Mood Dashboard")
+            // Support: iOS 17+ for onChange(of) without a performer. 
+            .onChange(of: tabViewModel.shouldRefreshDashboard) {
+                if tabViewModel.shouldRefreshDashboard {
+                    Task {
+                        try await viewModel.fetchMyRecentMoods(dataLength: 5, force: true)
+                        tabViewModel.shouldRefreshDashboard = false
+                    }
+                }
+            }
         }
     }
 }

@@ -11,8 +11,8 @@ struct InputSheetView: View {
     @Binding var userInput: String
     @Binding var isSheetPresented: Bool
     let moodName: String
-//    @ObservedObject var addMoodViewModel: AddMoodViewModel
-    let addMoodViewModel = AddMoodViewModel()
+    // Its own StateObject for creating new mood.
+    @StateObject  private var addMoodViewModel = AddMoodViewModel()
     // environment
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject private var tabViewModel: TabViewModel
@@ -62,6 +62,7 @@ struct InputSheetView: View {
                     }
                     // if succeed, turn off sheet and navigate to dashboard view.
                     isSheetPresented = false
+                    tabViewModel.shouldRefreshDashboard = true // notify that dashboard data need to be refetched once a new mood is created.
                     tabViewModel.selectedTab = 0 // Navigate to dashboard view
                 }
             } label: {
