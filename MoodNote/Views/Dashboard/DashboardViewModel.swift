@@ -16,6 +16,7 @@ class DashboardViewModel: ObservableObject {
         case failure(error: Error)
     }
     @Published var moods: [MoodModel] = []
+    @Published var last7DaysMoods: [AggregateMoodsByDate] = []
     @Published var errorMessage: String?
     @Published private(set) var status: ServiceStatus = .idle
     
@@ -35,6 +36,27 @@ class DashboardViewModel: ObservableObject {
             // Assign data
             self.status = .success
             moods = moodsData.data.data
+        } catch {
+            print("Fetch my recent moods failed: \(error.localizedDescription)")
+            self.errorMessage = "Unable to get moods data: Please try again later."
+            self.status = .failure(error: error)
+        }
+    }
+    
+    func fetchLast7DaysMoods(force: Bool = false) async throws {
+        if !force, case .success = status {
+            return // skip the call if not forced and data already fetched.
+        }
+        
+        self.status = .fetching
+        
+        do {
+            // URL session api call to fetch my recent moods
+            let last7DaysMoodsData = try await moodFetchService.fetchLast7DaysMoods()
+            
+            // Assign data
+            self.status = .success
+            last7DaysMoods = last7DaysMoodsData.data.myLast7DaysMoods
         } catch {
             print("Fetch my recent moods failed: \(error.localizedDescription)")
             self.errorMessage = "Unable to get moods data: Please try again later."
