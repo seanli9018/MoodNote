@@ -34,13 +34,14 @@ struct InputSheetView: View {
                 }
                 .padding()
             }
-            
+            // Create Mood Title
             Text("What made you feel this way?")
                 .font(.title2)
                 .fontWeight(.semibold)
             
+            // Text input
             TextEditor(text: $userInput)
-                .frame(minHeight: 100, maxHeight: 200)
+                .frame(minHeight: 50, maxHeight: 200)
                 .padding(4)
                 .background(Color(.secondarySystemBackground))
                 .cornerRadius(10)
@@ -52,6 +53,22 @@ struct InputSheetView: View {
                         isInputFieldFocused = true
                     }
                  }
+            
+            // Image upload input
+            VStack(alignment: .leading, spacing: 10 ) {
+                HStack {
+                    Text("Upload upto 3 images")
+                        .font(.caption)
+                    Text("(Optional)")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+                PhotoInputView()
+            }.padding(.vertical)
+            
+            Spacer()
+            
+            // Submit button
             Button {
                 Task {
                     try await addMoodViewModel.createMyMood(withMoodName: moodName, note: userInput, location: nil)
