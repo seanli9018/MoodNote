@@ -51,18 +51,7 @@ struct DashboardView: View {
                             }
                             
                         case .success:
-                            ForEach(viewModel.moods.indices) { index in
-                                let mood = viewModel.moods[index]
-                                
-                                MoodListItem(moodDetails: mood)
-                                    .padding(.vertical, 8)
-                                    .padding(.horizontal)
-                                
-                                if index < viewModel.moods.count - 1 {
-                                    Divider()
-                                        .padding(.leading) // optional: align divider with content
-                                }
-                            }
+                            MoodRecentView(dashboardViewModel: viewModel)
                     }
                 }
                 .padding(.horizontal)
@@ -70,7 +59,7 @@ struct DashboardView: View {
             }
             .onAppear {
                 Task {
-                    try await viewModel.fetchMyRecentMoods()
+                    try await viewModel.fetchMyRecentMoods(dataLength: 15)
                     try await viewModel.fetchLast7DaysMoods(force: true)
                 }
             }
@@ -78,7 +67,7 @@ struct DashboardView: View {
             .onChange(of: tabViewModel.shouldRefreshDashboard) {
                 if tabViewModel.shouldRefreshDashboard {
                     Task {
-                        try await viewModel.fetchMyRecentMoods(dataLength: 5, force: true)
+                        try await viewModel.fetchMyRecentMoods(dataLength: 15, force: true)
                         tabViewModel.shouldRefreshDashboard = false
                     }
                 }

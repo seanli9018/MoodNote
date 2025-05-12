@@ -44,7 +44,7 @@ struct MoodFetchService {
     private let tokenService = "auth_service"
     private let tokenAccount = "jwt_token"
     
-    func fetchMyRecentMoods(dataLength: Int = 5) async throws -> FetchMoodsResponse {
+    func fetchMyRecentMoods(dataLength: Int = 15) async throws -> FetchMoodsResponse {
         
         // Build fetch my recent moods url
         let fetchMyRecentMoodsURL = baseURL.appendingPathComponent("getMyMoods")

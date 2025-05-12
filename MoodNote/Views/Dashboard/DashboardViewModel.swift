@@ -22,7 +22,7 @@ class DashboardViewModel: ObservableObject {
     
     private let moodFetchService = MoodFetchService()
     
-    func fetchMyRecentMoods(dataLength: Int = 5, force: Bool = false) async throws {
+    func fetchMyRecentMoods(dataLength: Int = 15, force: Bool = false) async throws {
         if !force, case .success = status {
             return // skip the call if not forced and data aleady fetched.
         }
@@ -62,5 +62,19 @@ class DashboardViewModel: ObservableObject {
             self.errorMessage = "Unable to get moods data: Please try again later."
             self.status = .failure(error: error)
         }
+    }
+}
+
+extension DashboardViewModel {
+    var groupedMoodsByDate: [(date: Date, moods: [MoodModel])] {
+        let calendar = Calendar.current
+
+        let grouped = Dictionary(grouping: moods) { mood in
+            calendar.startOfDay(for: mood.createdAt) // strips time
+        }
+
+        return grouped
+            .sorted { $0.key > $1.key } // descending by date
+            .map { ($0.key, $0.value) }
     }
 }
