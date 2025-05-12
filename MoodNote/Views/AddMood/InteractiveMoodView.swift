@@ -10,6 +10,7 @@ import SwiftUI
 struct InteractiveMoodView: View {
     @State private var isSheetPresented = false
     @State private var userInput = ""
+    @State private var images: [UIImage] = []
     @FocusState private var isInputFieldFocused: Bool
     
     let moodIcon: String
@@ -32,7 +33,7 @@ struct InteractiveMoodView: View {
            }
         }
         .sheet(isPresented: $isSheetPresented) {
-            InputSheetView(userInput: $userInput, isSheetPresented: $isSheetPresented, moodName: moodName)
+            InputSheetView(userInput: $userInput, isSheetPresented: $isSheetPresented, images: $images, moodName: moodName)
            Spacer()
         }
     }

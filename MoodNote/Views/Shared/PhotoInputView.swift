@@ -10,7 +10,7 @@ import PhotosUI
 
 public struct PhotoInputView: View {
     @State private var selectedItems: [PhotosPickerItem] = []
-    @State private var selectedImages: [UIImage] = []
+    @Binding var selectedImages: [UIImage]
     
     public var body: some View {
         VStack (alignment: .leading) {

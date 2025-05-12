@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 @MainActor
 class AddMoodViewModel: ObservableObject {
@@ -20,12 +21,12 @@ class AddMoodViewModel: ObservableObject {
     
     private let moodService = MoodCreateService()
     
-    func createMyMood(withMoodName name: String, note: String, location: LocationModel?) async throws {
+    func createMyMood(withMoodName name: String, note: String, location: LocationModel?, images: [UIImage]?) async throws {
         self.status = .fetching
         
         do {
             // URL Session api call to create my mood
-            let _ = try await moodService.createMyMood(withMoodName: name, note: note, location: location)
+            let _ = try await moodService.createMyMood(withMoodName: name, note: note, location: location, images: images)
             
             // Assign data
             self.status = .success

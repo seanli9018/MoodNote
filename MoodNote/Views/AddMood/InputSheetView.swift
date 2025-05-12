@@ -10,9 +10,10 @@ struct InputSheetView: View {
     // passing from its parent
     @Binding var userInput: String
     @Binding var isSheetPresented: Bool
+    @Binding var images: [UIImage]
     let moodName: String
     // Its own StateObject for creating new mood.
-    @StateObject  private var addMoodViewModel = AddMoodViewModel()
+    @StateObject private var addMoodViewModel = AddMoodViewModel()
     // environment
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject private var tabViewModel: TabViewModel
@@ -63,7 +64,7 @@ struct InputSheetView: View {
                         .font(.caption)
                         .foregroundColor(.secondary)
                 }
-                PhotoInputView()
+                PhotoInputView(selectedImages: $images)
             }.padding(.vertical)
             
             Spacer()
@@ -71,7 +72,12 @@ struct InputSheetView: View {
             // Submit button
             Button {
                 Task {
-                    try await addMoodViewModel.createMyMood(withMoodName: moodName, note: userInput, location: nil)
+                    try await addMoodViewModel.createMyMood(
+                        withMoodName: moodName,
+                        note: userInput,
+                        location: nil,
+                        images: images
+                    )
                     
                     if addMoodViewModel.errorMessage != nil {
                         showError = true
